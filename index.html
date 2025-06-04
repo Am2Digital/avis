@@ -91,7 +91,8 @@
 </head>
 <body>
   <div class="container">
-    <h2>Évaluez votre visite</h2>
+   <div class="container" style="max-width: 520px; margin: auto; background: #f8fcff; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.07); font-family: 'Segoe UI', sans-serif;">
+  <h2 style="text-align: center; font-size: 1.9rem; color: #116098; margin-bottom: 1.5rem;">🩺 Évaluez votre visite au Centre Médical</h2>
     <div class="stars" id="ratingStars">
       <span data-value="1">★</span>
       <span data-value="2">★</span>
@@ -99,6 +100,8 @@
       <span data-value="4">★</span>
       <span data-value="5">★</span>
     </div>
+
+    
 
     <div id="chatResponse"></div>
 
@@ -109,9 +112,11 @@
       <button type="submit">Envoyer</button>
     </form>
 
-    <button id="btnGoogleAvis" onclick="window.location.href='https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3'">✅ Publier mon avis Google</button>
+    <button id="btnGoogleAvis" onclick="window.location.href='https://www.google.com/maps/place/Centre+M%C3%A9dical+Ramsay+Sant%C3%A9+Magenta/@48.879823,2.3506391,17z/data=!4m8!3m7!1s0x47e671dde1ae2d8d:0xf4dcde3b10125943!8m2!3d48.879823!4d2.353214!9m1!1b1!16s%2Fg%2F11r9522mf?entry=ttu&g_ep=EgoyMDI1MDYwMS4wIKXMDSoASAFQAw%3D%3D'">✅ Publier mon avis Google</button>
     <p id="confirmation">Merci, votre message a été envoyé.</p>
   </div>
+
+  
 
   <script>
    const stars = document.querySelectorAll("#ratingStars span");
@@ -192,11 +197,11 @@ document.getElementById("avisForm").addEventListener("submit", async (e) => {
   document.getElementById("confirmation").innerHTML = `
     Merci pour votre avis positif !<br><br>
     <strong>✨ Souhaitez-vous le publier également sur Google ?</strong><br>
-    <button onclick="window.open('https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3', '_blank')" style="margin-top:1em;">✅ Oui, publier mon avis</button><br>
+    <button onclick="window.open('https://www.google.com/maps/place/Centre+M%C3%A9dical+Ramsay+Sant%C3%A9+Magenta/@48.879823,2.3506391,17z/data=!4m8!3m7!1s0x47e671dde1ae2d8d:0xf4dcde3b10125943!8m2!3d48.879823!4d2.353214!9m1!1b1!16s%2Fg%2F11r9522mf?entry=ttu&g_ep=EgoyMDI1MDYwMS4wIKXMDSoASAFQAw%3D%3D', '_blank')" style="margin-top:1em;">✅ Oui, publier mon avis</button><br>
     <small>Redirection automatique dans 7 secondes...</small>
   `;
   setTimeout(() => {
-    window.open("https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3", "_blank");
+    window.open("https://www.google.com/maps/place/Centre+M%C3%A9dical+Ramsay+Sant%C3%A9+Magenta/@48.879823,2.3506391,17z/data=!4m8!3m7!1s0x47e671dde1ae2d8d:0xf4dcde3b10125943!8m2!3d48.879823!4d2.353214!9m1!1b1!16s%2Fg%2F11r9522mf?entry=ttu&g_ep=EgoyMDI1MDYwMS4wIKXMDSoASAFQAw%3D%3D", "_blank");
   }, 7000);
 } else {
       document.getElementById("confirmation").style.display = "block";
