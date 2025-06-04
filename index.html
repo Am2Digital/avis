@@ -2,16 +2,211 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sérénité+</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avis - Sérénité+</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    // 🔧 Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3DEpSXS64pvSxOs1sdAZw3Bv81dop00k",
+      authDomain: "am2tech-dashboard.firebaseapp.com",
+      projectId: "am2tech-dashboard",
+      storageBucket: "am2tech-dashboard.appspot.com",
+      messagingSenderId: "708110803770",
+      appId: "1:708110803770:web:4818d748c2af29846ba603"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f7f9fb;
+      padding: 2em;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 0.5em;
+      font-size: 2em;
+      cursor: pointer;
+    }
+    .stars span {
+      color: #ccc;
+      transition: color 0.3s;
+    }
+    .stars span.selected {
+      color: gold;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.7em;
+      margin: 0.5em 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #00a86b;
+      color: white;
+      border: none;
+      padding: 0.8em 1.5em;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+    button:hover {
+      background: #008d5c;
+    }
+    #chatResponse {
+      margin-top: 1em;
+      background: #eef;
+      padding: 1em;
+      border-radius: 5px;
+      display: none;
+    }
+    #avisForm, #btnGoogleAvis {
+      display: none;
+      margin-top: 1em;
+    }
+    #confirmation {
+      margin-top: 1em;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Merci de votre visite</h1>
-    <p>Comment s'est passée votre expérience ?</p>
-    <button onclick="window.location.href='https://g.page/r/YOUR_GOOGLE_LINK'">✅ Satisfait</button>
-    <button onclick="window.location.href='form.html'">❌ Un souci ?</button>
+    <h2>Évaluez votre visite</h2>
+    <div class="stars" id="ratingStars">
+      <span data-value="1">★</span>
+      <span data-value="2">★</span>
+      <span data-value="3">★</span>
+      <span data-value="4">★</span>
+      <span data-value="5">★</span>
+    </div>
+
+    <div id="chatResponse"></div>
+
+    <form id="avisForm">
+      <textarea name="message" placeholder="Décrivez votre problème..." required></textarea>
+      <input type="text" name="telephone" placeholder="Votre téléphone (optionnel)">
+      <input type="hidden" name="rating" id="ratingInput" value="0">
+      <button type="submit">Envoyer</button>
+    </form>
+
+    <button id="btnGoogleAvis" onclick="window.location.href='https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3'">✅ Publier mon avis Google</button>
+    <p id="confirmation">Merci, votre message a été envoyé.</p>
   </div>
+
+  <script>
+   const stars = document.querySelectorAll("#ratingStars span");
+const ratingInput = document.getElementById("ratingInput");
+const chatBox = document.getElementById("chatResponse");
+const avisForm = document.getElementById("avisForm");
+const btnGoogleAvis = document.getElementById("btnGoogleAvis");
+
+// Gestion de la sélection des étoiles
+stars.forEach(star => {
+  star.addEventListener("click", () => {
+    const value = parseInt(star.getAttribute("data-value"));
+    ratingInput.value = value;
+
+    stars.forEach(s => s.classList.remove("selected"));
+    for (let i = 0; i < value; i++) {
+      stars[i].classList.add("selected");
+    }
+
+    if (value <= 3) {
+      chatBox.style.display = "block";
+      chatBox.textContent = "Nous sommes désolés pour votre expérience. Que s'est-il passé ?";
+      avisForm.style.display = "block";
+      btnGoogleAvis.style.display = "none";
+    } else {
+      chatBox.style.display = "none";
+      avisForm.style.display = "none";
+      btnGoogleAvis.style.display = "inline-block";
+    }
+  });
+});
+
+// Chatbot IA local intelligent
+function getBotResponse(message) {
+  message = message.toLowerCase();
+
+  if (message.includes("attente") || message.includes("retard") || message.includes("j'attend") || message.includes("j’attend") || message.includes("pas pris")) {
+    return "Nous sommes sincèrement désolés pour ce délai. Notre équipe va revoir l'organisation pour mieux respecter les horaires.";
+  }
+
+  if (message.includes("accueil") || message.includes("personnel") || message.includes("aucune info") || message.includes("pas informé")) {
+    return "Merci pour votre remarque. Nous allons sensibiliser le personnel pour améliorer la communication.";
+  }
+
+  if (message.includes("douleur") || message.includes("souffrance") || message.includes("mal")) {
+    return "Nous comprenons votre ressenti. Cela sera transmis à notre équipe médicale.";
+  }
+
+  if (message.includes("facture") || message.includes("paiement") || message.includes("tarif")) {
+    return "Nous allons vérifier votre situation de facturation dans les plus brefs délais.";
+  }
+
+  return "Merci pour votre retour, notre équipe va analyser votre message.";
+}
+
+// Soumission du formulaire (avis négatif)
+document.getElementById("avisForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+
+  const message = form.message.value.toLowerCase();
+  const response = getBotResponse(message);
+  chatBox.textContent = response;
+  chatBox.style.display = "block";
+
+  const data = {
+    message: form.message.value,
+    telephone: form.telephone.value,
+    rating: parseInt(form.rating.value),
+    date: new Date().toISOString()
+  };
+
+  try {
+    await firebase.firestore().collection("avis_prives").add(data);
+    form.style.display = "none";
+
+    if (data.rating >= 4) {
+  document.getElementById("confirmation").innerHTML = `
+    Merci pour votre avis positif !<br><br>
+    <strong>✨ Souhaitez-vous le publier également sur Google ?</strong><br>
+    <button onclick="window.open('https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3', '_blank')" style="margin-top:1em;">✅ Oui, publier mon avis</button><br>
+    <small>Redirection automatique dans 7 secondes...</small>
+  `;
+  setTimeout(() => {
+    window.open("https://www.google.co.jp/search?q=ramsay+magenta#lrd=0x47e671dde1ae2d8d:0xf4dcde3b10125943,3", "_blank");
+  }, 7000);
+} else {
+      document.getElementById("confirmation").style.display = "block";
+    }
+  } catch (err) {
+    alert("Erreur lors de l'enregistrement de l'avis.");
+  }
+});
+  
+
+  </script>
 </body>
 </html>
