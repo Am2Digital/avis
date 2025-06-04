@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Sérénité+</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="firebase.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Messages reçus</h1>
+    <ul id="avisList"></ul>
+  </div>
+  <script>
+    firebase.firestore().collection("avis_prives")
+      .orderBy("date", "desc")
+      .onSnapshot(snapshot => {
+        const list = document.getElementById("avisList");
+        list.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement("li");
+          item.textContent = `${new Date(data.date).toLocaleString()} - ${data.message} (${data.telephone || "anonyme"})`;
+          list.appendChild(item);
+        });
+      });
+  </script>
+</body>
+</html>
